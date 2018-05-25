@@ -1,7 +1,7 @@
 ## Vice City Autosplitter
 
 ### How to Use
-This script works with LiveSplit. If you don't have LiveSplit, [download it here](livesplit.org).
+This script works with LiveSplit. If you don't have LiveSplit, [download it here](https://livesplit.org).
 
 1. [Download the script here](https://github.com/KZFREW/KZ.Autosplitters/blob/master/Releases/Vice%20City/LiveSplit.GTAVC.asl), be sure it saves as an .asl file!
 2. Open up LiveSplit, then right click and choose "Edit Layout" from the context menu.
@@ -44,4 +44,4 @@ Here is what you should expect with the default settings:
 - hoxi (additional memory addresses)
 
 ### Bugs
-[Tweet at me](twitter.com/kz_frew) or DM me on discord if something goes wrong with the script.
+[Tweet at me](https://twitter.com/kz_frew) or DM me on discord if something goes wrong with the script.
