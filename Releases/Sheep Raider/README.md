@@ -9,7 +9,7 @@ This script works with LiveSplit. If you don't have LiveSplit, [download it here
 4. Press "Layout Settings" in the Layout Editor window, and click the "Scriptable Auto Splitter" tab.
 5. Click "Browse" and find the downloaded file. Once it loads in, you can select what you want to split during the run.
 
-When changing your settings, **be sure all the parent settings are also enabled!** "The Party" won't split unless you've also told the autosplitter to split for "Lawyer" as well as "Missions".
+When changing your settings, **be sure all the parent settings are also enabled!** "Level B1" won't split unless you've also told the autosplitter to split for "Bonus Levels."
 
 ### Split Settings
 This script allows you to split for the following:
