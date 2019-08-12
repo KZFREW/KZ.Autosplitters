@@ -52,6 +52,10 @@ state("gta-vc", "Japanese")
 
 startup
 {
+
+	// Set the autosplitter refresh rate to match the game framerate.
+	refreshRate = 30;
+
 	// List of mission memory addresses (for 1.0, see below for where offsets get added)
 	
 	// Collectible addresses
@@ -335,6 +339,13 @@ startup
 	// Used later to count stadium missions.
 	vars.stadAllCount = 0;
 	
+	/*
+	 * Easier debug output. Courtesy of tduva / GTASA autosplitter.
+	 */
+	Action<string> DebugOutput = (text) => {
+		print("[GTAVC Autosplitter] "+text);
+	};
+	vars.DebugOutput = DebugOutput;
 }
 
 init
@@ -568,7 +579,7 @@ split
 		foreach (var sideMissionOMF in vars.OMFList) {
 			if (vars.memoryWatchers[sideMissionOMF].Current > vars.memoryWatchers[sideMissionOMF].Old) {
 				vars.sideMissionOM = true;
-				print("skipping split because side mission");
+				vars.DebugOutput = ("Skipping split because side mission");
 			}
 		}
 		
@@ -576,7 +587,7 @@ split
 		if (vars.memoryWatchers["OMFVigilante"].Current < vars.memoryWatchers["OMFVigilante"].Old
 			|| (vars.memoryWatchers["VigilanteTimer"].Current == -100 && vars.memoryWatchers["VigilanteTimer"].Old != -100)) {
 			vars.sideMissionOM = true;
-			print("skipping split because side mission");
+			vars.DebugOutput = ("Skipping split because side mission");
 		}
 		
 		// If the checks above returned nothing, then we will split.
@@ -586,9 +597,10 @@ split
 	}
 
 	// Splits for the final split of Any%.
-	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.Split.Contains("btgFinalSplit")) {
+	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.split.Contains("btgFinalSplit")) {
 		vars.split.Add("btgFinalSplit");
 		vars.doSplit = true;
+		vars.DebugOutput = ("Final split triggered.");
 	}
 	
 	if (vars.doSplit)
@@ -598,17 +610,21 @@ split
 start
 {
 	// Starts the splits when the new game load has been completed (and is not a save).
-	return vars.memoryWatchers["gameState"].Old == 8+vars.gameStateShift
+	if (vars.memoryWatchers["gameState"].Old == 8+vars.gameStateShift
 	&& vars.memoryWatchers["gameState"].Current == 9+vars.gameStateShift
-	&& vars.memoryWatchers["notLoadingCheck"].Current == 1;
+	&& vars.memoryWatchers["notLoadingCheck"].Current == 1) {
+		vars.DebugOutput = ("ASL called start.");
+		return true;
+	}
 }
 
 reset
 {
 	// Resets the timer when the new game load starts but only if the timer isn't over 19 seconds yet.
-	return vars.memoryWatchers["gameState"].Old == 9+vars.gameStateShift
-	&& vars.memoryWatchers["gameState"].Current == 8+vars.gameStateShift
-	&& TimeSpan.Parse(timer.CurrentTime.RealTime.ToString()).TotalSeconds > 19;
+	if (vars.memoryWatchers["gameState"].Old == 9+vars.gameStateShift && vars.memoryWatchers["gameState"].Current == 8+vars.gameStateShift && TimeSpan.Parse(timer.CurrentTime.RealTime.ToString()).TotalSeconds > 19) {
+		vars.DebugOutput = ("ASL called reset.");
+		return true;
+	}
 }
 
 isLoading
