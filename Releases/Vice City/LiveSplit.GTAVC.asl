@@ -59,7 +59,7 @@ startup
 	
 	// Collectible addresses
 	vars.collectibles = new Dictionary<string, int> {
-		{"Packages", 0x4226E8},
+		{"Packages", 0x54ADD0},
 		{"Stunt Jumps", 0x421EDC},
 		{"Rampages", 0x42286C},
 		{"Robberies", 0x422A6C}
