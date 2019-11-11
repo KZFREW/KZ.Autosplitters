@@ -52,6 +52,9 @@ state("gta-vc", "Japanese")
 
 startup
 {
+	// Set the autosplitter refresh rate (lower = less CPU and less accurate, higher = more CPU usage and more accurate) default: 60
+	refreshRate = 30;
+	
 	// List of mission memory addresses (for 1.0, see below for where offsets get added)
 	
 	// Collectible addresses
