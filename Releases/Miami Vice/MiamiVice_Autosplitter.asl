@@ -2,7 +2,7 @@
 // by KZ_FREW
 // Contributions from Makkebakke and Mr. Mary
 
-state("MiamiVice") // Tell the autosplitter which process to hook into. In this case, SheepD3D.exe.
+state("MiamiVice")
 {
 	// Dutch Language
 	//string2 level : "MiamiVice.exe", 0x1F7C67; // Level value stored in plaintext
@@ -39,7 +39,7 @@ split
 		return true;
 	}
 	
-	// If on final level and boss just died, split for the end of the game
+	// If on final level and objective screen appears, split for the end of the game
 	if(current.level == "9b" && !vars.splits.Contains(current.level + "End")) {
 		if (current.endRun) {
 			vars.splits.Add(current.level + "End");
