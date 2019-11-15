@@ -2,7 +2,7 @@
 // by KZ_FREW
 // Contributions from Makkebakke and Mr. Mary
 
-state("MiamiVice")
+state("MiamiVice") // Tell the autosplitter which process to hook into. In this case, SheepD3D.exe.
 {
 	// Dutch Language
 	//string2 level : "MiamiVice.exe", 0x1F7C67; // Level value stored in plaintext
@@ -13,6 +13,7 @@ state("MiamiVice")
 	byte menu 	  : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
 	int juanHealth: "MiamiVice.exe", 0x14F4EC, 0x220, 0x4C, 0x30, 0x44; // final boss HP, 34 when "dead"
 	bool isLoading: 0x15AD10; // thanks Mr Mary!
+	bool endRun	  : "MiamiVice.exe", 0x15AC3F; // timing end test
 }
 
 init
@@ -40,7 +41,7 @@ split
 	
 	// If on final level and boss just died, split for the end of the game
 	if(current.level == "9b" && !vars.splits.Contains(current.level + "End")) {
-		if (current.juanHealth > 0 && current.juanHealth < 35) {
+		if (current.endRun) {
 			vars.splits.Add(current.level + "End");
 			return true;
 		}
