@@ -1,12 +1,18 @@
 // Miami Vice autosplitter
 // by KZ_FREW
+// Contributions from Makkebakke and Mr. Mary
 
 state("MiamiVice")
 {
-	string2 level : 0x1F7C68; // Level value stored in plaintext
-	byte menu 	  : 0x13E073; // 1 when ingame, 0 when in menu
-	int JuanHealth: 0x14F4EC, 0x220, 0x4C, 0x30, 0x44; // final boss HP, 34 when "dead"
-	bool isLoading : 0x15AD10; // thanks Mr Mary!
+	// Dutch Language
+	//string2 level : "MiamiVice.exe", 0x1F7C67; // Level value stored in plaintext
+	
+	// English Language
+	string2 level : "MiamiVice.exe", 0x1F7C68; // Level value stored in plaintext
+	
+	byte menu 	  : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
+	int juanHealth: "MiamiVice.exe", 0x14F4EC, 0x220, 0x4C, 0x30, 0x44; // final boss HP, 34 when "dead"
+	bool isLoading: 0x15AD10; // thanks Mr Mary!
 }
 
 init
@@ -18,7 +24,7 @@ init
 start
 {
 	// If: in-game -- just left the menu -- and loading into the first level, start timer & clear splits list
-	if(current.menu == 1 && current.menu != old.menu && current.level == "1:") {	
+	if(current.menu == 1 && current.level == "1:") {
 		vars.splits.Clear();
 		return true;
 	}
@@ -29,13 +35,15 @@ split
 	// Standard level splitting, check if level value updated and if we have already split for it. If not, split
 	if(current.level != old.level && current.level != "1:" && !vars.splits.Contains(current.level)) {
 		vars.splits.Add(current.level);
-		return true;	
+		return true;
 	}
 	
 	// If on final level and boss just died, split for the end of the game
-	if(current.level == "9b" && current.JuanHealth == 34 && !vars.splits.Contains(current.level + "End")) {
-		vars.splits.Add(current.level + "End");
-		return true;
+	if(current.level == "9b" && !vars.splits.Contains(current.level + "End")) {
+		if (current.juanHealth > 0 && current.juanHealth < 35) {
+			vars.splits.Add(current.level + "End");
+			return true;
+		}
 	}
 }
 
