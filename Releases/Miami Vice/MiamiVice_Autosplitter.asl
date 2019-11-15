@@ -1,7 +1,7 @@
 // Miami Vice autosplitter
 // by KZ_FREW
 
-state("MiamiVice") // Tell the autosplitter which process to hook into. In this case, SheepD3D.exe.
+state("MiamiVice")
 {
 	string2 level : 0x1F7C68; // Level value stored in plaintext
 	byte menu 	  : 0x13E073; // 1 when ingame, 0 when in menu
