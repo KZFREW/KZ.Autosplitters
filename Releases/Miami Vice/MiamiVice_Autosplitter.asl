@@ -63,5 +63,5 @@ reset
 
 isLoading
 {
-	return (current.isLoading && !current.saveMenu);
+	return (current.isLoading;
 }
