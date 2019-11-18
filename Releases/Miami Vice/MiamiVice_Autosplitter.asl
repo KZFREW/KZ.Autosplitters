@@ -8,13 +8,13 @@ state("MiamiVice")
 	//string2 level : "MiamiVice.exe", 0x1F7C67; // Level value stored in plaintext
 	
 	// English Language
-	string2 level : "MiamiVice.exe", 0x1F7C68; // Level value stored in plaintext
+	string2 level    : "MiamiVice.exe", 0x1F7C68; // Level value stored in plaintext
 	
-	byte menu 	  : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
-	int juanHealth: "MiamiVice.exe", 0x14F4EC, 0x220, 0x4C, 0x30, 0x44; // final boss HP, 34 when "dead"
-	bool isLoading: 0x15AD10; // thanks Mr Mary!
-	bool saveMenu : "MiamiVice.exe", 0x15AC79;
-	bool endRun	  : "MiamiVice.exe", 0x15AC3F; // timing end test
+	byte menu 	     : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
+	bool isLoading   : 0x15AD10; // thanks Mr Mary!
+	bool saveMenu 	 : "MiamiVice.exe", 0x15AC79;
+	bool endRun	  	 : "MiamiVice.exe", 0x15AC3F; // timing end test
+	bool saveConfirm : "MiamiVice.exe", 0x15A89C;
 }
 
 init
@@ -59,5 +59,5 @@ reset
 
 isLoading
 {
-	return (current.isLoading && !current.saveMenu);
+	return (current.isLoading && !current.saveMenu && !current.saveConfirm);
 }
