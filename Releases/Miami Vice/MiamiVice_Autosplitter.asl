@@ -4,31 +4,48 @@
 
 state("MiamiVice")
 {
-	// Dutch Language
-	//string2 level : "MiamiVice.exe", 0x1F7C67; // Level value stored in plaintext
-	
-	// English Language
-	string2 level    : "MiamiVice.exe", 0x1F7C68; // Level value stored in plaintext
-	
-	byte menu 	     : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
-	bool isLoading   : 0x15AD10; // thanks Mr Mary!
-	bool saveMenu 	 : "MiamiVice.exe", 0x15AC79;
-	bool endRun	  	 : "MiamiVice.exe", 0x15AC3F; // timing end test
-	bool saveConfirm : "MiamiVice.exe", 0x15A89C;
+	string10 levelStr : "MiamiVice.exe", 0x1F7C60; // Level value stored in plaintext
+	byte menu         : "MiamiVice.exe", 0x13E073; // 1 when ingame, 0 when in menu
+	bool endRun       : "MiamiVice.exe", 0x15AC3F;
+	bool saveMenu     : "MiamiVice.exe", 0x15AC79;
+	bool saveConfirm  : "MiamiVice.exe", 0x15A89C;
+	bool isLoading    : 0x15AD10; // thanks Mr Mary!
 }
 
 init
 {
+	vars.readyToStart = false;
+	
+	vars.cindex = 0;
+	vars.oldLevel = "";
+	vars.currentLevel = "";
+	
 	// Empty list to add split values
 	vars.splits = new List<string>();
 	vars.loadValue = 0;
 }
 
+update
+{
+	// Extract the level id from the level string
+	vars.cindex = old.levelStr.IndexOf(' ');
+	if( vars.cindex >= 0 ) vars.oldLevel = old.levelStr.Substring(vars.cindex + 1, 2);
+	
+	vars.cindex = current.levelStr.IndexOf(' ');
+	if( vars.cindex >= 0 ) vars.currentLevel = current.levelStr.Substring(vars.cindex + 1, 2);
+	
+	if (!vars.readyToStart && timer.CurrentPhase == TimerPhase.NotRunning) {
+		vars.readyToStart = (current.menu == 0 ? true : false);
+	}
+}
+
 start
 {
-	// If: in-game -- just left the menu -- and loading into the first level, start timer & clear splits list
-	if(current.menu == 1 && current.level == "1:") {
+	// If: in-game and loading into the first level, start timer & clear splits list
+	if(vars.readyToStart && current.menu == 1 && vars.currentLevel == "1:") {
+		vars.readyToStart = false;
 		vars.splits.Clear();
+		vars.splits.Add("1:");
 		return true;
 	}
 }
@@ -36,18 +53,13 @@ start
 split
 {
 	// Standard level splitting, check if level value updated and if we have already split for it. If not, split
-	if(current.level != old.level && current.level != "1:" && !vars.splits.Contains(current.level)) {
-		vars.splits.Add(current.level);
+	if(current.levelStr != old.levelStr && !vars.splits.Contains(vars.currentLevel)) {
+		vars.splits.Add(vars.currentLevel);
 		return true;
 	}
 	
 	// If on final level and objective screen appears, split for the end of the game
-	if(current.level == "9b" && !vars.splits.Contains(current.level + "End")) {
-		if (current.endRun) {
-			vars.splits.Add(current.level + "End");
-			return true;
-		}
-	}
+	if(vars.currentLevel == "9b") return current.endRun;
 }
 
 reset
