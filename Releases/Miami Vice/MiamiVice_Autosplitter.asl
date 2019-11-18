@@ -14,6 +14,8 @@ state("MiamiVice")
 
 init
 {
+	vars.readyToStart = false;
+	
 	vars.cindex = 0;
 	vars.oldLevel = "";
 	vars.currentLevel = "";
@@ -31,12 +33,17 @@ update
 	
 	vars.cindex = current.levelStr.IndexOf(' ');
 	if( vars.cindex >= 0 ) vars.currentLevel = current.levelStr.Substring(vars.cindex + 1, 2);
+	
+	if (!vars.readyToStart && timer.CurrentPhase == TimerPhase.NotRunning) {
+		vars.readyToStart = (current.menu == 0 ? true : false);
+	}
 }
 
 start
 {
 	// If: in-game and loading into the first level, start timer & clear splits list
-	if(current.menu == 1 && vars.currentLevel == "1:") {
+	if(vars.readyToStart && current.menu == 1 && vars.currentLevel == "1:") {
+		vars.readyToStart = false;
 		vars.splits.Clear();
 		vars.splits.Add("1:");
 		return true;
