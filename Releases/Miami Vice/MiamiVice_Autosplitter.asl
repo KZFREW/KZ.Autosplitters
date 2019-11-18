@@ -20,7 +20,7 @@ init
 	vars.oldLevel = "";
 	vars.currentLevel = "";
 	
-	// List to add split values, include level 1 string
+	// Empty list to add split values
 	vars.splits = new List<string>();
 	vars.loadValue = 0;
 }
