@@ -524,7 +524,9 @@ split
 			if (settings["OMFSplit"]) {
 				vars.queuedSplit = true;
 			}
+			else {
 				vars.doSplit = true;
+			}
 		}
 	}
 	
@@ -589,13 +591,14 @@ split
 	}
 
 	// Splits for the final split of Any%.
-	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.split.Contains("btgFinalSplit")) {
+	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.Split.Contains("btgFinalSplit")) {
 		vars.split.Add("btgFinalSplit");
 		vars.doSplit = true;
 	}
 	
-	if (vars.doSplit)
+	if (vars.doSplit) {
 		return true;
+	}
 }
 
 start
