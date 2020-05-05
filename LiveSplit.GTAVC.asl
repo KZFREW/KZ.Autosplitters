@@ -524,7 +524,9 @@ split
 			if (settings["OMFSplit"]) {
 				vars.queuedSplit = true;
 			}
+			else {
 				vars.doSplit = true;
+			}
 		}
 	}
 	
@@ -594,8 +596,9 @@ split
 		vars.doSplit = true;
 	}
 	
-	if (vars.doSplit)
+	if (vars.doSplit) {
 		return true;
+	}
 }
 
 start
