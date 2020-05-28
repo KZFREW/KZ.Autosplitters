@@ -76,7 +76,7 @@ startup
 	// Main story/asset mission addresses
 	vars.missionAddresses = new Dictionary<string, Dictionary<int, string>> {
 		{"Ken Rosenberg", new Dictionary<int, string> {
-	  		{0x4215F8, "An Old Friend"},
+	  	//	{0x4215F8, "An Old Friend"},
 			{0x421600, "The Party"},
 			{0x421604, "Back Alley Brawl"},
 			{0x421608, "Jury Fury"},
