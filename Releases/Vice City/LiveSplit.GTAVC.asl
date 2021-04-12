@@ -76,7 +76,7 @@ startup
 	// Main story/asset mission addresses
 	vars.missionAddresses = new Dictionary<string, Dictionary<int, string>> {
 		{"Ken Rosenberg", new Dictionary<int, string> {
-	  	//	{0x4215F8, "An Old Friend"},
+	  		{0x4215F8, "An Old Friend"},
 			{0x421600, "The Party"},
 			{0x421604, "Back Alley Brawl"},
 			{0x421608, "Jury Fury"},
@@ -186,10 +186,10 @@ startup
 			{0x42135C, "Dirtring"}
 		}},
 		{"Chopper Checkpoints", new Dictionary<int, string> { // some of these don't work
-			{0x422B44, "Ocean Beach"},
-			{0x422B48, "Vice Point"},
-			{0x422B4C, "Little Haiti"},
-			{0x422B40, "Downtown"}
+			{0x422B44, "Ocean Beach Chopper Checkpoint"},
+			{0x422B48, "Vice Point Chopper Checkpoint"},
+			{0x422B4C, "Little Haiti Chopper Checkpoint"},
+			{0x422B40, "Downtown Chopper Checkpoint"}
 		}},
 		{"Off-Road Challenges", new Dictionary<int, string> {
 			{0x4217CC, "PCJ Playground"},
@@ -249,14 +249,15 @@ startup
 	// -------------
 	
 	// Parent settings.
-	settings.Add("OMFSplit", false, "Split on Start of Next Mission (experimental)");
+	settings.Add("OMFSplit", false, "Split on Mission Start");
+	settings.SetToolTip("OMFSplit", "This setting affects all missions.");
 	settings.Add("Missions", true, "Missions");
 	settings.Add("Assets", true, "Assets");
 	settings.Add("Sunshine Autos", false, "Sunshine Autos", "Assets");
 	settings.Add("Odd Jobs", false, "Odd Jobs");
 	settings.Add("Collectibles", false, "Collectibles");
 	
-	// Adding mission headers
+	// Adding mission headers for mission end
 	settings.CurrentDefaultParent = "Missions";
 	addMissionHeader("Ken Rosenberg", true, "Lawyer");
 	addMissionHeader("Avery", false, "Avery");
@@ -273,13 +274,14 @@ startup
 	addMissionHeader("Phil Cassidy", false, "Phil Cassidy");
 	addMissionHeader("Mr. Black", false, "Mr. Black");
 	
-	// Asset headers (includes mansion and printworks).
+	// Asset (end) headers (includes mansion and printworks).
 	settings.CurrentDefaultParent = "Assets";
 	addMissionHeader("Vercetti Mansion", true, "Vercetti Mansion");
 	addMissionHeader("Printworks", true, "Printworks");
 	addMissionHeader("Film Studio", false, "Film Studio");
 	addMissionHeader("Kaufman Cabs", false, "Kaufman Cabs");
 	addMissionHeader("Malibu", false, "Malibu");
+
 	
 	// Adding settings for "mission2" list and storing in missionList.
 	foreach (var mission in vars.mission2)
@@ -428,7 +430,10 @@ init
 	// This is all "split at start of mission" address tracking.
 	// ---------------------------------------------------------
 	
-	// A list of names and memory addresses for OMFs, both the main one and ones for side missions and such.
+	var missionNameAddress = (version == "Japanese") ? 0x38A008 : 0x38D000+vars.offset; 
+	vars.memoryWatchers.Add(new StringWatcher(new DeepPointer(missionNameAddress), 64) { Name = "missionName"});
+
+/* 	// A list of names and memory addresses for OMFs, both the main one and ones for side missions and such.
 	vars.OMFList = new List<string> {"OMFParamedic", "OMFFirefighter", "OMFTaxi", "OMFRampage", "OMFPhonecall", "OMFSaveGame"};
 	vars.memoryWatchers.Add(new MemoryWatcher<int>(new DeepPointer(0x421764+vars.offset)) { Name = "OMF" });
 	vars.memoryWatchers.Add(new MemoryWatcher<int>(new DeepPointer(0x42177C+vars.offset)) { Name = "OMFParamedic" });
@@ -445,7 +450,7 @@ init
 	// This address will be 0 if vigilante has never been started, -100 on start and then a high number that decreases while on vigilante.
 	// The high number will then freeze if vigilante is cancelled.
 	var VigilanteTimerAddress = (version == "Japanese") ? 0x424E60 : 0x427E50+vars.offset;
-	vars.memoryWatchers.Add(new MemoryWatcher<int>(new DeepPointer(VigilanteTimerAddress)) { Name = "VigilanteTimer" });
+	vars.memoryWatchers.Add(new MemoryWatcher<int>(new DeepPointer(VigilanteTimerAddress)) { Name = "VigilanteTimer" }); */
 	// End "split at start of mission" address tracking.
 	// ---------------------------------------------------------
 	
@@ -473,6 +478,7 @@ update
 		}
 		vars.PrevPhase = timer.CurrentPhase;
 	}
+
 }
 
 split
@@ -517,16 +523,33 @@ split
 				}
 			}
 		}
-		if (settings[mission] && vars.memoryWatchers[mission].Current > vars.memoryWatchers[mission].Old && !vars.split.Contains(mission)) {
+		if (!settings["OMFSplit"] && settings[mission] && vars.memoryWatchers[mission].Current > vars.memoryWatchers[mission].Old && !vars.split.Contains(mission)) {
 			vars.split.Add(mission);
-			
-			// If the relevant setting is active, queues up the split to be done at a later time; if not, just splits now.
-			if (settings["OMFSplit"]) {
-				vars.queuedSplit = true;
+			vars.doSplit = true;
+		}
+	}
+
+	// split on mission start stuff
+	foreach (var mission in vars.missionList) {
+		var missionWatcher = vars.memoryWatchers["missionName"].Current;
+		var missionName = mission;
+		// Remove property names from splits
+		if (missionName.Contains("(Cherry Poppers)"))
+		{
+			missionName = "Distribution";
+		}
+		if (missionName.Contains("(Boatyard)"))
+		{
+			missionName = "Checkpoint Charlie";
+		}
+		if (version == "Japanese") {
+			if (missionName == "Distribution") {
+				missionName = "Ice Cream Mission";
 			}
-			else {
-				vars.doSplit = true;
-			}
+		}
+		if (settings[mission] && settings["OMFSplit"] && vars.memoryWatchers["missionName"].Current != vars.memoryWatchers["missionName"].Old && missionWatcher == missionName && !vars.split.Contains(missionName)) {
+			vars.split.Add(mission);
+			vars.doSplit = true;
 		}
 	}
 	
@@ -564,7 +587,7 @@ split
 		}
 	}
 	
-	// more OMFSplit stuff.
+/* 	// more OMFSplit stuff.
 	// If there is a queued split and the OMF has changed to 1, then check to see if we should split now or not.
 	if (settings["OMFSplit"] && vars.queuedSplit && vars.memoryWatchers["OMF"].Current > vars.memoryWatchers["OMF"].Old) {
 		vars.sideMissionOM = false;
@@ -588,10 +611,10 @@ split
 		if (!vars.sideMissionOM) {
 			vars.doSplit = true; vars.queuedSplit = false;
 		}
-	}
+	} */
 
 	// Splits for the final split of Any%.
-	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.split.Contains("btgFinalSplit")) {
+	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.Split.Contains("btgFinalSplit")) {
 		vars.split.Add("btgFinalSplit");
 		vars.doSplit = true;
 	}
