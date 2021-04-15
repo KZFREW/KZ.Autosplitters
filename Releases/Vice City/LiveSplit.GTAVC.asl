@@ -105,7 +105,7 @@ startup
 		}},
 		{"Vercetti", new Dictionary<int, string> {
 			{0x42163C, "Rub Out"},
-			{0x4216B8, "Keep Your Friends Close..."}
+			{0x4216B8, "Keep your Friends Close..."}
 		}},
 		{"Umberto Robina", new Dictionary<int, string> {
 			{0x4216DC, "Stunt Boat Challenge"},		
@@ -222,6 +222,7 @@ startup
 	
 	// Creating separate lists for easier checking later.
 	vars.missionList = new List<string>();
+	vars.missionStartList = new List<string>();
 	vars.collectibleList = new List<string>();
 	vars.stadList = new List<string>(); // stadium missions list
 	
@@ -244,21 +245,44 @@ startup
 		settings.Add(parent, defaultValue, header);
 		addMissionChain(missions, defaultValue);
 	};
+
+	// Copy of above functions for mission/asset start
+	Action<string, bool> addMissionChainStart = (missions, defaultValue) => {
+		var parent = missions;
+		foreach (var address in vars.missionAddresses[missions]) {
+			if (address.Value == "An Old Friend") // don't need this
+			{
+				continue;
+			}
+			if (address.Value.Contains("Rifle Range"))
+			{
+				continue;
+			}
+			settings.Add(address.Value + " (start)", defaultValue, address.Value, parent + " (start)");
+			vars.missionStartList.Add(address.Value + " (start)");
+		}
+	};
+	
+	Action<string, bool, string> addMissionHeaderStart = (missions, defaultValue, header) => {
+		var parent = missions;
+		settings.Add(parent + " (start)", defaultValue, header);
+		addMissionChainStart(missions, defaultValue);
+	};
 		
 	// Settings Page
 	// -------------
 	
 	// Parent settings.
-	settings.Add("OMFSplit", false, "Split on Mission Start");
-	settings.SetToolTip("OMFSplit", "This setting affects all missions.");
-	settings.Add("Missions", true, "Missions");
-	settings.Add("Assets", true, "Assets");
-	settings.Add("Sunshine Autos", false, "Sunshine Autos", "Assets");
+	settings.Add("Missions (end)", true, "Missions (end)");
+	settings.Add("Assets (end)", true, "Assets (end)");
+	settings.Add("Missions (start)", false, "Missions (start)");
+	settings.Add("Assets (start)", false, "Assets (start)");
+	settings.Add("Sunshine Autos", false, "Sunshine Autos", "Assets (end)");
 	settings.Add("Odd Jobs", false, "Odd Jobs");
 	settings.Add("Collectibles", false, "Collectibles");
 	
 	// Adding mission headers for mission end
-	settings.CurrentDefaultParent = "Missions";
+	settings.CurrentDefaultParent = "Missions (end)";
 	addMissionHeader("Ken Rosenberg", true, "Lawyer");
 	addMissionHeader("Avery", false, "Avery");
 	addMissionHeader("Cortez", true, "Cortez");
@@ -275,18 +299,43 @@ startup
 	addMissionHeader("Mr. Black", false, "Mr. Black");
 	
 	// Asset (end) headers (includes mansion and printworks).
-	settings.CurrentDefaultParent = "Assets";
+	settings.CurrentDefaultParent = "Assets (end)";
 	addMissionHeader("Vercetti Mansion", true, "Vercetti Mansion");
 	addMissionHeader("Printworks", true, "Printworks");
 	addMissionHeader("Film Studio", false, "Film Studio");
 	addMissionHeader("Kaufman Cabs", false, "Kaufman Cabs");
 	addMissionHeader("Malibu", false, "Malibu");
 
+	// Adding mission headers for mission start
+	settings.CurrentDefaultParent = "Missions (start)";
+	addMissionHeaderStart("Ken Rosenberg", true, "Lawyer");
+	addMissionHeaderStart("Avery", false, "Avery");
+	addMissionHeaderStart("Cortez", true, "Cortez");
+	addMissionHeaderStart("Diaz", true, "Diaz");
+	
+	addMissionHeaderStart("Kent Paul", true, "Kent Paul");
+	addMissionHeaderStart("Vercetti", true, "Vercetti");
+	addMissionHeaderStart("Umberto Robina", false, "Umberto Robina");
+	addMissionHeaderStart("Auntie Poulet", false, "Auntie Poulet");
+	
+	addMissionHeaderStart("Mitch Baker", false, "Mitch Baker");
+	addMissionHeaderStart("Love Fist", false, "Love Fist");
+	addMissionHeaderStart("Phil Cassidy", false, "Phil Cassidy");
+	addMissionHeaderStart("Mr. Black", false, "Mr. Black");
+	
+	// Asset (start) headers (includes mansion and printworks).
+	settings.CurrentDefaultParent = "Assets (start)";
+	addMissionHeaderStart("Vercetti Mansion", true, "Vercetti Mansion");
+	addMissionHeaderStart("Printworks", true, "Printworks");
+	addMissionHeaderStart("Film Studio", false, "Film Studio");
+	addMissionHeaderStart("Kaufman Cabs", false, "Kaufman Cabs");
+	addMissionHeaderStart("Malibu", false, "Malibu");
+
 	
 	// Adding settings for "mission2" list and storing in missionList.
 	foreach (var mission in vars.mission2)
 	{
-		settings.CurrentDefaultParent = "Assets";
+		settings.CurrentDefaultParent = "Assets (end)";
 		// Seperate check for Rifle Range to categorize it appropriately
 		if (mission.Key == "Rifle Range (45 Points)") {
 			settings.CurrentDefaultParent = "Odd Jobs";
@@ -479,6 +528,10 @@ update
 		vars.PrevPhase = timer.CurrentPhase;
 	}
 
+	print("kyfc1 " + vars.memoryWatchers["kyfc1"].Current.ToString());
+	print("kyfc2 " + vars.memoryWatchers["kyfc2"].Current.ToString());
+	print("kyfc3 " + vars.memoryWatchers["kyfc3"].Current.ToString());
+
 }
 
 split
@@ -523,16 +576,16 @@ split
 				}
 			}
 		}
-		if (!settings["OMFSplit"] && settings[mission] && vars.memoryWatchers[mission].Current > vars.memoryWatchers[mission].Old && !vars.split.Contains(mission)) {
+		if (settings[mission] && vars.memoryWatchers[mission].Current > vars.memoryWatchers[mission].Old && !vars.split.Contains(mission)) {
 			vars.split.Add(mission);
 			vars.doSplit = true;
 		}
 	}
 
 	// split on mission start stuff
-	foreach (var mission in vars.missionList) {
+	foreach (var mission in vars.missionStartList) {
 		var missionWatcher = vars.memoryWatchers["missionName"].Current;
-		var missionName = mission;
+		var missionName = mission.Replace(" (start)", "");
 		// Remove property names from splits
 		if (missionName.Contains("(Cherry Poppers)"))
 		{
@@ -547,7 +600,7 @@ split
 				missionName = "Ice Cream Mission";
 			}
 		}
-		if (settings[mission] && settings["OMFSplit"] && vars.memoryWatchers["missionName"].Current != vars.memoryWatchers["missionName"].Old && missionWatcher == missionName && !vars.split.Contains(missionName)) {
+		if (settings[mission] && vars.memoryWatchers["missionName"].Current != vars.memoryWatchers["missionName"].Old && missionWatcher == missionName && !vars.split.Contains(mission)) {
 			vars.split.Add(mission);
 			vars.doSplit = true;
 		}
@@ -614,7 +667,7 @@ split
 	} */
 
 	// Splits for the final split of Any%.
-	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.Split.Contains("btgFinalSplit")) {
+	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.split.Contains("btgFinalSplit")) {
 		vars.split.Add("btgFinalSplit");
 		vars.doSplit = true;
 	}

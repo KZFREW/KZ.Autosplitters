@@ -528,6 +528,10 @@ update
 		vars.PrevPhase = timer.CurrentPhase;
 	}
 
+	print("kyfc1 " + vars.memoryWatchers["kyfc1"].Current.ToString());
+	print("kyfc2 " + vars.memoryWatchers["kyfc2"].Current.ToString());
+	print("kyfc3 " + vars.memoryWatchers["kyfc3"].Current.ToString());
+
 }
 
 split
@@ -663,7 +667,7 @@ split
 	} */
 
 	// Splits for the final split of Any%.
-	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.Split.Contains("btgFinalSplit")) {
+	if (settings["btgFinalSplit"] && vars.memoryWatchers["kyfc1"].Current == 245 && vars.memoryWatchers["kyfc2"].Current > vars.memoryWatchers["kyfc3"].Current && !vars.split.Contains("btgFinalSplit")) {
 		vars.split.Add("btgFinalSplit");
 		vars.doSplit = true;
 	}
