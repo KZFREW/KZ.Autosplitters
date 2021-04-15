@@ -528,10 +528,6 @@ update
 		vars.PrevPhase = timer.CurrentPhase;
 	}
 
-	print("kyfc1 " + vars.memoryWatchers["kyfc1"].Current.ToString());
-	print("kyfc2 " + vars.memoryWatchers["kyfc2"].Current.ToString());
-	print("kyfc3 " + vars.memoryWatchers["kyfc3"].Current.ToString());
-
 }
 
 split
