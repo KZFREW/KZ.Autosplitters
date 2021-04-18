@@ -14,7 +14,7 @@ When changing your settings, **be sure all the parent settings are also enabled!
 ### Split Settings
 This script allows you to split for the following:
 
-- All storyline missions, all asset missions, all gang war missions.
+- All storyline missions, all asset missions, all gang war missions; beginning or end.
 - All Sunshine Autos races and export lists.
 - All Stadium events, including the ability to split once all three are complete.
 - All Chopper Checkpoints, Off-Road Challenges, and RC Top-Fun missions.
@@ -41,7 +41,8 @@ Here is what you should expect with the default settings:
 - pitpo (contributions to the original script)
 - tduva (for the extensive San Andreas autosplitter that I used bits and pieces of)
 - lighnat0r (memory addresses)
-- hoxi (additional memory addresses)
+- hoxi (maintenance and features)
+- iguaan (good guy)
 
 ### Bugs
 [Tweet at me](https://twitter.com/kz_frew) or DM me on discord if something goes wrong with the script.
