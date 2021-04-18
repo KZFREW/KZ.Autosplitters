@@ -91,14 +91,14 @@ startup
 			{0x421614, "Treacherous Swine"},
 			{0x421618, "Mall Shootout"},
 			{0x42161C, "Guardian Angels"},
-			{0x421620, "Sir, Yes, Sir!"},
+			{0x421620, "Sir, Yes Sir!"},
 			{0x421624, "All Hands On Deck!"}
 		}},
 		{"Diaz", new Dictionary<int, string> {
 			{0x42162C, "The Chase"},
 			{0x421630, "Phnom Penh '86"},
 			{0x421634, "The Fastest Boat"},
-			{0x421638, "Supply and Demand"}
+			{0x421638, "Supply & Demand"}
 		}},
 		{"Kent Paul", new Dictionary<int, string> {
 			{0x421648, "Death Row"}
@@ -119,8 +119,8 @@ startup
 			{0x4216F8, "Dirty Lickin's"}
 		}},
 		{"Mitch Baker", new Dictionary<int, string> {
-			{0x4216CC, "Alloy Wheels Of Steel"},
-			{0x4216D0, "Messing With The Man"},
+			{0x4216CC, "Alloy Wheels of Steel"},
+			{0x4216D0, "Messing with the Man"},
 			{0x4216D4, "Hog Tied"}
 		}},
 		{"Love Fist", new Dictionary<int, string> {
@@ -134,9 +134,9 @@ startup
 		}},
 		{"Mr. Black", new Dictionary<int, string> {
 			{0x421728, "Road Kill"},
-			{0x42172C, "Waste The Wife"},
+			{0x42172C, "Waste the Wife"},
 			{0x421730, "Autocide"},
-			{0x421734, "Check Out At The Check In"},
+			{0x421734, "Check Out at the Check In"},
 			{0x421738, "Loose Ends"}
 		}},
 		{"Vercetti Mansion", new Dictionary<int, string> {
@@ -167,7 +167,7 @@ startup
 			{0x421684, "Recruitment Drive"},
 			{0x421688, "Dildo Dodo"},
 			{0x42168C, "Martha's Mug Shot"},
-			{0x421690, "G-Spotlight"}
+			{0x421690, "G-spotlight"}
 		}},
 		{"Kaufman Cabs", new Dictionary<int, string> {
 			{0x421750, "V.I.P."},
@@ -527,7 +527,6 @@ update
 		}
 		vars.PrevPhase = timer.CurrentPhase;
 	}
-
 
 }
 
