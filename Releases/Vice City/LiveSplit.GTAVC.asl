@@ -402,6 +402,12 @@ init
 		version = "Steam";
 		vars.offset = -0xFF8;
 	}
+
+	else if (modules.First().ModuleMemorySize == 6553600)
+	{
+		version = "Steam";
+		vars.offset = -0xFF8;
+	}
 	
 	// Detects current game version if RU Steam (also maybe detects 1.1?).
 	// Russian Steam version uses the same stuff as 1.1.
