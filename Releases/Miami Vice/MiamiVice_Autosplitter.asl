@@ -1,6 +1,6 @@
 // Miami Vice autosplitter
 // by KZ_FREW
-// Contributions from Makkebakke and Mr. Mary
+// Contributions from KinzyKenzie and Mr. Mary
 
 state("MiamiVice")
 {
