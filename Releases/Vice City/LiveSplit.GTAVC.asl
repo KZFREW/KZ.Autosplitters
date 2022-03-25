@@ -1,15 +1,7 @@
 // Original autosplitter by zoton2 and pitpo, contributions by MHMD_FVC.
-
-// KZ_FREW changes:
-// Added side missions and collectibles
-// Prevented splitting after loading a save mid-run
-// Cleaned up the settings list in LiveSplit
-// 
-// To do:
-// Clean up the split logic a bit
-// Test with the experimental "split on mission start" setting
-
-// I borrowed a lot of code from tduva -- really helped me out, so credit where it's due. Thanks tduva.
+// Current iteration originally built by KZ_FREW, based off San Andreas script by tduva, memory addresses borrowed from lighnat0r
+// Contributions by iguaan
+// Maintained (feature parity) by hoXyy
 
 state("gta-vc")
 {
