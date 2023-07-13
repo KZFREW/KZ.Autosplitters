@@ -651,6 +651,7 @@ split
 	}
 	
 	//no ssu splits
+	print(current.camX + " " + current.camY + " " + current.camZ);
 	if ((settings["Tswine"]) && (!vars.split.Contains("Tswine"))) {		
 		if ((current.camX + " " + current.camY + " " + current.camZ == "-229.438 -1364.204 12.607")) {
 			if(current.tswineCall) {
@@ -674,7 +675,7 @@ split
 		}
 	}
 	if ((settings["DiazDed"]) && (!vars.split.Contains("DiazDed"))) {
-		if ((current.camX + " " + current.camY + " " + current.camZ == "-393.7734 -555.7239 26.91097")) {
+		if ((current.camX + " " + current.camY == "-393.7734 -555.7239") && (current.camZ > 26.9) && (current.camZ < 27)) {
 			vars.split.Add("DiazDed");
 			vars.doSplit = true;
 		}
