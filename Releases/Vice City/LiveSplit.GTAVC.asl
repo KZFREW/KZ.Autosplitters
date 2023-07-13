@@ -651,7 +651,6 @@ split
 	}
 	
 	//no ssu splits
-	print(current.camX + " " + current.camY + " " + current.camZ);
 	if ((settings["Tswine"]) && (!vars.split.Contains("Tswine"))) {		
 		if ((current.camX + " " + current.camY + " " + current.camZ == "-229.438 -1364.204 12.607")) {
 			if(current.tswineCall) {
