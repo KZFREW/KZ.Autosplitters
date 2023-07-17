@@ -40,6 +40,12 @@ state("gta-vc", "Japanese")
 	int loadSaveLoad : 0x38A72C;
 	int replayLoad : 0x387734;
 	byte genLoad : 0x2F4759;
+	float camX : "gta-vc.exe", 0x003006B0;
+	float camY : "gta-vc.exe", 0x003006B4;
+	float camZ : "gta-vc.exe", 0x003006B8;
+	bool tswineCall : "gta-vc.exe", 0x0041F460;
+	bool sysCall : "gta-vc.exe", 0x0041F4AC;
+	bool ctcCall: "gta-vc.exe", 0x0041F430;
 }
 
 startup
@@ -272,6 +278,16 @@ startup
 	settings.Add("Sunshine Autos", false, "Sunshine Autos", "Assets (end)");
 	settings.Add("Odd Jobs", false, "Odd Jobs");
 	settings.Add("Collectibles", false, "Collectibles");
+	settings.Add("No SSU Specific", false, "No SSU Specific");
+	
+	//No SSU Specific stuff
+	//settings.CurrentDefaultParent = "No SSU Specific";
+	settings.Add("Tswine", true, "Treacherous Swine Start", "No SSU Specific");
+	settings.Add("StarIsland", true, "The Chase Start", "No SSU Specific");
+	settings.Add("SYS", true, "Sir Yes Sir Start", "No SSU Specific");
+	settings.Add("DiazDed", true, "Diaz Dead", "No SSU Specific");
+	settings.Add("CopLandEnd", true, "Cop Land Fadeout", "No SSU Specific");
+	settings.Add("CTC", true, "Cap the Collector Start", "No SSU Specific");
 	
 	// Adding mission headers for mission end
 	settings.CurrentDefaultParent = "Missions (end)";
@@ -409,7 +425,7 @@ init
 		vars.offset = 8;
 	}
 	
-	else {
+	else { //
 		// Detects current game version if not Steam.
 		switch ((int)current.gameVersion)
 		{
@@ -630,6 +646,50 @@ split
 						vars.split.Add(splitName);
 						vars.doSplit = true;
 					}				
+			}
+		}
+	}
+	
+	//no ssu splits
+	if ((settings["Tswine"]) && (!vars.split.Contains("Tswine"))) {		
+		if ((current.camX + " " + current.camY + " " + current.camZ == "-229.438 -1364.204 12.607")) {
+			if(current.tswineCall) {
+				vars.split.Add("Tswine");
+				vars.doSplit = true;
+			}
+		}
+	}
+	if ((settings["StarIsland"]) && (!vars.split.Contains("StarIsland"))) {
+		if ((current.camX + " " + current.camY + " " + current.camZ == "-381.923 -473.339 48.904")) {
+			vars.split.Add("StarIsland");
+			vars.doSplit = true;
+		}
+	}
+	if ((settings["SYS"]) && (!vars.split.Contains("SYS"))) {
+		if ((current.camX + " " + current.camY + " " + current.camZ == "-229.438 -1364.204 12.607")) {
+			if(current.sysCall) {
+				vars.split.Add("SYS");
+				vars.doSplit = true;
+			}
+		}
+	}
+	if ((settings["DiazDed"]) && (!vars.split.Contains("DiazDed"))) {
+		if ((current.camX + " " + current.camY == "-393.7734 -555.7239") && (current.camZ > 26.9) && (current.camZ < 27)) {
+			vars.split.Add("DiazDed");
+			vars.doSplit = true;
+		}
+	}
+	if ((settings["CopLandEnd"]) && (!vars.split.Contains("CopLandEnd"))) {
+		if ((current.camX + " " + current.camY + " " + current.camZ == "-369.1 -467.9 22.7")) {
+			vars.split.Add("CopLandEnd");
+			vars.doSplit = true;
+		}
+	}
+	if ((settings["CTC"]) && (!vars.split.Contains("CTC"))) {
+		if ((current.camX + " " + current.camY + " " + current.camZ == "-1039.093 -293.828 27.81")) {
+			if(current.ctcCall) {
+				vars.split.Add("CTC");
+				vars.doSplit = true;
 			}
 		}
 	}
