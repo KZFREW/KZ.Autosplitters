@@ -492,12 +492,9 @@ startup
 	settings.Add("Distribution (start)", false, "Distribution (Cherry Poppers)");
 	vars.missionStarts.Add("Distribution (start)", "ICECRE1");
 
-	// Preserving the naming for backwards compat with existing settings.
-	settings.Add("Sunshine Autos (start)", false, "Sunshine Autos (purchase)");
-	vars.missionStarts.Add("Sunshine Autos (start)", "CARBUY1");
-
-	// Adding other asset purchase settings and storing in missionStarts.
+	// Adding asset purchase settings and storing in missionStarts.
 	foreach (var asset in new Dictionary<string, string> {
+		{"Sunshine Autos (purchase)", "CARBUY1"},
 		{"Boatyard (purchase)", "BOATBY"},
 		{"Printworks (purchase)", "BUYPRO1"},
 		{"Film Studio (purchase)", "BUYPRO2"},
