@@ -408,6 +408,7 @@ startup
 	settings.Add("Missions (end)", true, "Missions (end)");
 	settings.Add("Assets (end)", true, "Assets (end)");
 	settings.Add("Missions (start)", false, "Missions (start)");
+	settings.Add("Assets (purchase)", false, "Assets (purchase)");
 	settings.Add("Assets (start)", false, "Assets (start)");
 	settings.Add("Odd Jobs", false, "Odd Jobs (end)");
 	settings.Add("Odd Jobs (start)", false, "Odd Jobs (start)");
@@ -477,6 +478,22 @@ startup
 	addMissionHeaderStart("Love Fist", false, "Love Fist");
 	addMissionHeaderStart("Mitch Baker", false, "Mitch Baker");
 
+	// Adding asset purchase settings and storing in missionStarts.
+	settings.CurrentDefaultParent = "Assets (purchase)";
+	foreach (var asset in new Dictionary<string, string> {
+		{"Sunshine Autos", "CARBUY1"},
+		{"Boatyard", "BOATBY"},
+		{"Printworks", "BUYPRO1"},
+		{"Film Studio", "BUYPRO2"},
+		{"Malibu", "BUYPRO3"},
+		{"Pole Position", "BUYPRO4"},
+		{"Cherry Poppers", "ICECUT"},
+		{"Kaufman Cabs", "TAXCUT"},
+	}) {
+		settings.Add(asset.Key + " (purchase)", false, asset.Key);
+		vars.missionStarts.Add(asset.Key, asset.Value);
+	}
+
 	// Asset (start) headers (includes Mansion and Printworks).
 	settings.CurrentDefaultParent = "Assets (start)";
 	addMissionHeaderStart("Vercetti Mansion", true, "Vercetti Mansion");
@@ -491,21 +508,6 @@ startup
 	vars.missionStarts.Add("Checkpoint Charlie (start)", "COKERUN");
 	settings.Add("Distribution (start)", false, "Distribution (Cherry Poppers)");
 	vars.missionStarts.Add("Distribution (start)", "ICECRE1");
-
-	// Adding asset purchase settings and storing in missionStarts.
-	foreach (var asset in new Dictionary<string, string> {
-		{"Sunshine Autos (purchase)", "CARBUY1"},
-		{"Boatyard (purchase)", "BOATBY"},
-		{"Printworks (purchase)", "BUYPRO1"},
-		{"Film Studio (purchase)", "BUYPRO2"},
-		{"Malibu (purchase)", "BUYPRO3"},
-		{"Pole Position (purchase)", "BUYPRO4"},
-		{"Cherry Poppers (purchase)", "ICECUT"},
-		{"Kaufman Cabs (purchase)", "TAXCUT"},
-	}) {
-		settings.Add(asset.Key, false);
-		vars.missionStarts.Add(asset.Key, asset.Value);
-	}
 
 	// Adding mission end setting for every other side mission.
 	settings.CurrentDefaultParent = "Odd Jobs";
