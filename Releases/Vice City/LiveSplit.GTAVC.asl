@@ -481,14 +481,14 @@ startup
 	// Adding asset purchase settings and storing in missionStarts.
 	settings.CurrentDefaultParent = "Assets (purchase)";
 	foreach (var asset in new Dictionary<string, string> {
-		{"Sunshine Autos", "CARBUY1"},
-		{"Boatyard", "BOATBY"},
 		{"Printworks", "BUYPRO1"},
 		{"Film Studio", "BUYPRO2"},
-		{"Malibu", "BUYPRO3"},
-		{"Pole Position", "BUYPRO4"},
-		{"Cherry Poppers", "ICECUT"},
 		{"Kaufman Cabs", "TAXCUT"},
+		{"Malibu", "BUYPRO3"},
+		{"Sunshine Autos", "CARBUY1"},
+		{"Boatyard", "BOATBY"},
+		{"Cherry Poppers", "ICECUT"},
+		{"Pole Position", "BUYPRO4"},
 	}) {
 		settings.Add(asset.Key + " (purchase)", false, asset.Key);
 		vars.missionStarts.Add(asset.Key, asset.Value);
